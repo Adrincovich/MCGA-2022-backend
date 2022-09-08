@@ -13,7 +13,7 @@ const PORT = 3000
 app.use(express.json()) //para decirle al server que acepte json. En back con express no usamos parse - stringify
 
 app.get("/", (req, res) => {
-    res.send("asd")
+    res.send("Ping")
 })
 
 app.get("/products", (req, res) => {
@@ -26,6 +26,9 @@ app.get("/products/byName/:name", (req, res) => {
     if (filterProducts.length == 0) return res.status(204).json(filterProducts)
     res.status(200).json(filterProducts)
 })
+// si vamos a http://localhost:3000/products/byName/Fanta devuelve el objeto
+// si hacemos la misma peticion en postman devuelve lo mismo pero indentado
+
 
 app.post("/products/add", (req ,res) => { // post para agregar productos
     const newProduct = {
@@ -45,8 +48,33 @@ app.post("/products/add", (req ,res) => { // post para agregar productos
     res.json(newProduct)
 })
 
-
 // para el ejercicio delete hacerlo por id por ruta
+
+app.delete("/products/deleteById/:id", (req, res) => {
+    const id = req.params.id
+
+    products.filter((item, index) => {
+        if (item.id == id){
+            products.splice(index, 1)
+        }
+    })
+
+    return res.send(products)
+
+});
+
+app.delete("/products/deleteByName/:name", (req, res) => {
+    const name = req.params.name
+
+    products.filter((item, index) => {
+        if (item.name == name){
+            products.splice(index, 1)
+        }
+    })
+
+    return res.send(products)
+
+});
 
 
 app.listen(PORT, () => {
