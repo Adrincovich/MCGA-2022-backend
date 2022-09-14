@@ -32,3 +32,5 @@ const ProductScheme = new Schema({  //inicializamos productos
 })
 
 module.exports = mongoose.model("Products", ProductScheme) //por ultimo exportamos
+
+//Asocia un nombre al esquema que nosotros querramos

@@ -1,16 +1,16 @@
 const router = require("express").Router()
-const products = require("../schemes/products")
+const providers = require("../schemes/providers")
 
 
 router.get("/", (req,res) => {
-    products.find({isDeleted: false})//busca todos los productos con baja logica
+    providers.find({isDeleted: false})//busca todos los proveedires con baja logica
             .then((data) => res.json({data}))
             .catch((error) => res.status(500).json({message: error}))
 })
 
 router.get("/:id", (req,res) => {
     const id = req.params.id
-    products.findOne({_id: id})
+    providers.findOne({_id: id})
             .then((data) => {
                 if(!data) return res.status(404).json({msg: "Not Found"})
                 return res.json({data})
@@ -20,7 +20,7 @@ router.get("/:id", (req,res) => {
 
 router.get("/:name", (req,res) => {
     const name = req.params.name
-    products.findOne({name: name})
+    providers.findOne({name: name})
             .then((data) => {
                 if(!data) return res.status(404).json({msg: "Not Found"})
                 return res.json({data})
@@ -33,9 +33,9 @@ router.get("/:name", (req,res) => {
 
 
 router.post("/add", (req, res) => {
-    const newProduct = new products(req.body)
-    newProduct.save() //guarda el objeto en la base de datos
-              .then(data => res.status(200).json({message: "Product created", data})) // data todo lo que se guarda en products
+    const newProvider = new providers(req.body)
+    newProvider.save() //guarda el objeto en la base de datos
+              .then(data => res.status(200).json({message: "Provider created", data})) // data todo lo que se guarda en providers
               .catch((error) => res.status(500).json({message: error}))
               // si no coumple las condiciones del esquema tira error
 })
@@ -46,8 +46,8 @@ router.post("/add", (req, res) => {
 
 router.put("/update/:id", (req,res) => {
     const id = req.params.id;
-    products.findByIdAndUpdate(id, req.body)
-    .then(data => res.status(200).json({mensaje: "Product updated", data}))
+    providers.findByIdAndUpdate(id, req.body)
+    .then(data => res.status(200).json({mensaje: "Provider updated", data}))
     .catch(() => res.status(500).json({mensaje: error}));
 })
 
@@ -55,12 +55,12 @@ router.put("/update/:id", (req,res) => {
 //Primero realizamos baja logica con metodo .delete y en caso de querer dar alta nuevamente, un put
 router.delete("/delete/:id", (req,res) => {
     const id = req.params.id;
-    products.findByIdAndUpdate(id, {isDeleted: true})
+    providers.findByIdAndUpdate(id, {isDeleted: true})
     .then(data => {
         if (!data) {
             return res.status(404).json({mensaje: "Not Found"})
         }
-        return res.status(204).json({mensaje:"Product logically deleted"});
+        return res.status(204).json({mensaje:"Provider logically deleted"});
     })
     .catch(error => res.status(500).json({mensaje: error}));
 })
@@ -69,8 +69,8 @@ router.delete("/delete/:id", (req,res) => {
 // se actualiza el atributo isDeleted para dar nuevamente el alta
 router.put("/alta/:id", (req,res) => {
     const id = req.params.id;
-    products.findByIdAndUpdate(id, {isDeleted: false})
-    .then(data => res.status(200).json({mensaje: `The product ${data.name} has been enabled again`}))
+    providers.findByIdAndUpdate(id, {isDeleted: false})
+    .then(data => res.status(200).json({mensaje: `The provider ${data.name} has been enabled again`}))
     .catch(() => res.status(500).json({mensaje: error}));
 })
 
