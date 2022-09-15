@@ -3,29 +3,35 @@ const providers = require("../schemes/providers")
 
 
 router.get("/", (req,res) => {
-    providers.find({isDeleted: false})//busca todos los proveedires con baja logica
-            .then((data) => res.json({data}))
-            .catch((error) => res.status(500).json({message: error}))
+    providers.find({isDeleted: false})//busca todos los proveedires por baja logica
+            .then(data => res.json({data}))
+            .catch(error => res.status(500).json({message: error}))
 })
 
-router.get("/:id", (req,res) => {
+router.get("/deleted", (req,res) => {
+    products.find({isDeleted: true})//busca todos los productos con baja logica
+            .then(data => res.json({data}))
+            .catch(error => res.status(500).json({message: error}))
+})
+
+router.get("/byId/:id", (req,res) => {
     const id = req.params.id
     providers.findOne({_id: id})
-            .then((data) => {
+            .then(data => {
                 if(!data) return res.status(404).json({msg: "Not Found"})
                 return res.json({data})
             })
             .catch((error) => res.status(500).json({message: error}))
 })
 
-router.get("/:name", (req,res) => {
+router.get("/byName/:name", (req,res) => {
     const name = req.params.name
     providers.findOne({name: name})
-            .then((data) => {
+            .then(data => {
                 if(!data) return res.status(404).json({msg: "Not Found"})
                 return res.json({data})
             })
-            .catch((error) => res.status(500).json({message: error}))
+            .catch(error => res.status(500).json({message: error}))
 })
 
 
@@ -36,7 +42,7 @@ router.post("/add", (req, res) => {
     const newProvider = new providers(req.body)
     newProvider.save() //guarda el objeto en la base de datos
               .then(data => res.status(200).json({message: "Provider created", data})) // data todo lo que se guarda en providers
-              .catch((error) => res.status(500).json({message: error}))
+              .catch(error => res.status(500).json({message: error}))
               // si no coumple las condiciones del esquema tira error
 })
 
@@ -48,12 +54,12 @@ router.put("/update/:id", (req,res) => {
     const id = req.params.id;
     providers.findByIdAndUpdate(id, req.body)
     .then(data => res.status(200).json({mensaje: "Provider updated", data}))
-    .catch(() => res.status(500).json({mensaje: error}));
+    .catch(error => res.status(500).json({mensaje: error}));
 })
 
 
 //Primero realizamos baja logica con metodo .delete y en caso de querer dar alta nuevamente, un put
-router.delete("/delete/:id", (req,res) => {
+router.delete("/deleteById/:id", (req,res) => {
     const id = req.params.id;
     providers.findByIdAndUpdate(id, {isDeleted: true})
     .then(data => {
@@ -71,7 +77,7 @@ router.put("/alta/:id", (req,res) => {
     const id = req.params.id;
     providers.findByIdAndUpdate(id, {isDeleted: false})
     .then(data => res.status(200).json({mensaje: `The provider ${data.name} has been enabled again`}))
-    .catch(() => res.status(500).json({mensaje: error}));
+    .catch(error => res.status(500).json({mensaje: error}));
 })
 
 
