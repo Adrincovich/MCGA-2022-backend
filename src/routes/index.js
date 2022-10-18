@@ -1,10 +1,10 @@
 const express = require("express")
-const productsRoutes = require("./products")
-const providersRoutes = require("./providers")
+const product = require("./Products")
+const provider = require("./Providers")
 
 const router = express.Router()
 
-router.use("/products", productsRoutes)
-router.use("/providers", providersRoutes)
+router.use("/product", product)
+router.use("/provider", provider)
 
 module.exports = router

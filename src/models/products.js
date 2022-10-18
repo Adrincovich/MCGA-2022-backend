@@ -3,9 +3,6 @@ const mongoose = require("mongoose")  //requiere mongoose del package
 const {Schema} = mongoose  //clase para crear esquema
 
 const ProductScheme = new Schema({  //inicializamos productos
-    id: {
-        type: Schema.Types.ObjectId
-    },
     name: {
         type: String,
         require: true,
